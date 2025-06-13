@@ -3,17 +3,26 @@
 	"version": "0.0.0",
 	"private": true,
 	"scripts": {
-		"start": "nodemon index.js"
+		"start": "nodemon index.js",
+		"dev": "nodemon index.js"
 	},
 	"dependencies": {
+		"bcrypt": "^6.0.0",
 		"cookie-parser": "~1.4.4",
 		"debug": "~2.6.9",
 		"dotenv": "^16.5.0",
 		"express": "~4.16.1",
+		"hbs": "^4.2.0",
 		"http-errors": "~1.6.3",
 		"jade": "~1.11.0",
+		"joi": "^17.13.3",
+		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.15.1",
 		"morgan": "~1.9.1",
-		"nodemon": "^3.1.10"
+		"nodemon": "^3.1.10",
+		"passport": "^0.7.0",
+		"passport-jwt": "^4.0.1",
+		"passport-local": "^1.0.0",
+		"passport-oauth2-jwt-bearer": "^0.2.0"
 	}
 }
