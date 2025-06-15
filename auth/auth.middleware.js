@@ -73,12 +73,15 @@ function loginMiddleware(req, res, next) {
 	}
 	passport.authenticate("login", async (err, user, info) => {
 		try {
-			if (err) {
-				return next(err);
-			}
 			if (!user) {
 				const error = new Error("Username or password is incorrect");
-				return next(error);
+				return res.status(401).json({
+					message: "Username or password is incorrect",
+				});
+			}
+
+			if (err) {
+				return next(err);
 			}
 
 			req.login(user, { session: false }, async (error) => {
@@ -127,7 +130,12 @@ async function signupMiddleware(req, res, next) {
 		req.user = user;
 		next();
 	} catch (error) {
-		return next(error);
+		if (error?.code === 11000) {
+			return res.status(400).send({
+				message: "User with this email already exists",
+			});
+		}
+		next(error);
 	}
 }
 module.exports = { loginMiddleware, signupMiddleware };

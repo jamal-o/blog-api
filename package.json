@@ -4,7 +4,10 @@
 	"private": true,
 	"scripts": {
 		"start": "nodemon index.js",
-		"dev": "nodemon index.js"
+		"dev": "nodemon index.js",
+		"test": "jest --detectOpenHandles",
+		"test:watch": "jest --watch",
+		"test:coverage": "jest --coverage"
 	},
 	"dependencies": {
 		"bcrypt": "^6.0.0",
@@ -24,5 +27,9 @@
 		"passport-jwt": "^4.0.1",
 		"passport-local": "^1.0.0",
 		"passport-oauth2-jwt-bearer": "^0.2.0"
+	},
+	"devDependencies": {
+		"jest": "^29.7.0",
+		"supertest": "^7.1.1"
 	}
 }

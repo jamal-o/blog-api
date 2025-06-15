@@ -19,7 +19,12 @@ authRouter.post("/login", authMiddleWare.loginMiddleware, (req, res) => {
 authRouter.post("/signup", authMiddleWare.signupMiddleware, (req, res) => {
 	res.status(201).json({
 		message: "Signup successful",
-		user: req.user,
+		user: {
+			id: req.user.id,
+			first_name: req.user.first_name,
+			last_name: req.user.last_name,
+			email: req.user.email,
+		},
 	});
 });
 

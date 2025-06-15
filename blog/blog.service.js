@@ -13,12 +13,20 @@ const projection = {
 	body: 1,
 	updatedAt: 1,
 };
-async function fetchArticles({ filter, sort, page, pageSize, asc }) {
-	return BlogModel.find(filter, projection, {
-		...(sort && { sort: sort }),
-		skip: (page - 1) * pageSize,
-		limit: pageSize,
-	}).exec();
+async function fetchArticles({ filter, sort, page, search, pageSize }) {
+	return BlogModel.find(
+		{
+			...filter,
+			...(search && { $text: { $search: search } }),
+		},
+		projection,
+		{
+			...(sort && { sort: sort }),
+
+			skip: (page - 1) * pageSize,
+			limit: pageSize,
+		}
+	).exec();
 }
 
 async function fetchArticle({ articleId }) {
@@ -29,13 +37,14 @@ async function fetchArticle({ articleId }) {
 			new: true,
 			projection: projection,
 		}
-	).exec();
+	)
+		.populate("authorId")
+		.exec();
 }
 
 async function createArticle({ article, userId }) {
 	article.authorId = userId;
-	let result = await BlogModel.create(article);
-	return result; //TODO: select fields
+	return await BlogModel.create(article);
 }
 
 async function updateArticle({ article, userId, articleId }) {
@@ -49,12 +58,8 @@ async function updateArticle({ article, userId, articleId }) {
 	);
 }
 
-async function deleteArticle({ articleId }) {
-	let deleteCount = await BlogModel.deleteOne({ _id: articleId });
-	if (deleteCount.deletedCount === 0) {
-		throw new Error("article not found");
-	}
-	return;
+async function deleteArticle({ articleId, userId }) {
+	return await BlogModel.deleteOne({ _id: articleId, authorId: userId });
 }
 
 module.exports = {

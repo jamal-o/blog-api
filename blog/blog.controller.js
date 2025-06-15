@@ -8,22 +8,35 @@ const {
 
 const UserModel = require("../models/user");
 /// fetch all articles
-/// filter by author, title, tags, state
 /// paginate default 20 per page
 /// orderable by read_count, reading_time and timestamp
+/// searchable by title, author and tags
 async function fetchArticlesController(req, res) {
 	try {
-		let { author, title, tags, state } = req.query;
+		let { search } = req.query;
+
+		// Get sort options
+		let sortOptions = [
+			"read_count",
+			"read_count_desc",
+			"timestamp",
+			"timestamp_desc",
+			"reading_time",
+			"reading_time_desc",
+		];
+		let sort = sortOptions.includes(req.query.sort) ? req.query.sort : null;
+		// if ends in "_desc" remove the string and append "-" to the start of the string
+		if (sort && sort.endsWith("_desc")) {
+			sort = "-" + sort.slice(0, -5);
+			console.log(sort);
+		}
 
 		let articles = await fetchArticles({
 			filter: {
-				...(author && { author: author }),
-				...(title && { title: title }),
-				...(tags && { tags: tags }),
-				...(state && { state: state }),
+				state: "published",
 			},
-			sort: req.query.sort,
-			asc: req.query.asc ?? "asc",
+			search: search ?? null,
+			sort: sort,
 			page: req.query.page ?? 1,
 			pageSize: req.query.pageSize ?? 20,
 		});
@@ -37,19 +50,17 @@ async function fetchArticlesController(req, res) {
 }
 
 /// fetch user articles
+// - only owner can fetch
+//
 async function fetchUserArticlesController(req, res) {
 	try {
-		//user
-		let authorId = req.user._id; //TODO:
-		let { title, tags, state } = req.query;
+		let authorId = req.user._id;
+		let { state } = req.query;
 		let articles = await fetchArticles({
 			filter: {
-				...(authorId && { authorId: authorId }),
-				...(title && { title: title }),
-				...(tags && { tags: tags }),
+				authorId: authorId,
 				...(state && { state: state }),
 			},
-			sort: req.query.sort,
 			page: req.query.page ?? 1,
 			pageSize: req.query.pageSize ?? 20,
 		});
@@ -82,6 +93,11 @@ async function fetchArticleController(req, res) {
 		res.send({ blog: article, author });
 	} catch (error) {
 		console.error(error);
+		if (error.message === "Article not found") {
+			return res.status(404).send({
+				message: "Article not found",
+			});
+		}
 		res.status(500).send({
 			message: "Something went wrong",
 		});
@@ -113,6 +129,12 @@ async function createArticleController(req, res) {
 		});
 	} catch (error) {
 		console.error(error);
+
+		if (error?.code === 11000) {
+			return res.status(400).send({
+				message: "Article with same title already exists",
+			});
+		}
 		res.status(500).send({
 			message: "Something went wrong",
 		});
@@ -138,14 +160,33 @@ async function updateArticleController(req, res) {
 	}
 }
 
+/// update article
+/// - only logged in users can update
+/// - only owner can update article
+async function publishArticleController(req, res) {
+	try {
+		let result = await updateArticle({
+			article: { state: "published" },
+			articleId: req.params.id,
+			userId: req.user._id,
+		});
+		res.status(200).json({ message: "Article published successfully" });
+	} catch (error) {
+		console.error(error);
+		res.status(500).send({
+			message: "Something went wrong",
+		});
+	}
+}
+
 /// delete article
 /// - only logged in users can delete
 /// - only owner can delete
 
 async function deleteArticleController(req, res) {
 	try {
-		await deleteArticle({ articleId: req.params.id });
-		res.send({message: "Article deleted successfully"});
+		await deleteArticle({ articleId: req.params.id, userId: req.user._id });
+		res.send({ message: "Article deleted successfully" });
 	} catch (error) {
 		console.error(error);
 		res.status(500).send({
@@ -160,5 +201,6 @@ module.exports = {
 	fetchArticleController,
 	createArticleController,
 	updateArticleController,
+	publishArticleController,
 	deleteArticleController,
 };

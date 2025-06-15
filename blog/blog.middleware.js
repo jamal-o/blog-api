@@ -6,7 +6,7 @@ function articleValidator(req, res, next) {
 		description: joi.string().required(),
 		tags: joi.array(),
 		state: joi.string().valid("draft", "published"),
-		body: joi.string(),
+		body: joi.string().required(),
 	});
 
 	const { error, value } = schema.validate(req.body);

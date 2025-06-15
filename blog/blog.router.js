@@ -14,14 +14,16 @@ const { articleValidator } = require("./blog.middleware");
 
 blogRouter.get("/", blogController.fetchArticlesController);
 
+blogRouter.get("/read/:id", blogController.fetchArticleController);
+
+
 blogRouter.use(passport.authenticate("jwt", { session: false }));
 
 blogRouter.get("/user", blogController.fetchUserArticlesController);
 
-blogRouter.get("/:id", blogController.fetchArticleController);
-
-
 blogRouter.post("/", articleValidator, blogController.createArticleController);
+
+blogRouter.post("/publish/:id", blogController.publishArticleController);
 
 blogRouter.patch(
 	"/:id",

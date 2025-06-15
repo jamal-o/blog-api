@@ -1,81 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Blog API</title>
     <link rel="stylesheet" href="/styles/main.css">
 </head>
+
 <body>
     <div class="container">
         <h1>Blog API</h1>
-        
-        <section class="auth-section">
-            <h2>Authentication</h2>
-            <div class="routes-section">                
-                <div class="route-item">
-                    <span class="method post">POST</span>
-                    <span class="route-path">/auth/login</span>
-                    <p>Authenticates user and returns JWT token</p>
-                </div>
-                <div class="route-item">
-                    <span class="method post">POST</span>
-                    <span class="route-path">/auth/signup</span>
-                    <p>Creates a new user account</p>
-                </div>
-     
-            </div>
-        </section>
 
-        <section class="blog-section">
-            <h2>Blog Endpoints</h2>
-            <div class="routes-section">
-                <div class="route-item">
-                    <span class="method get">GET</span>
-                    <span class="route-path">/blog</span>
-                    <p>Fetches all published articles (public access)</p>
-                </div>
-                <div class="route-item">
-                    <span class="method get">GET</span>
-                    <span class="route-path">/blog/:id</span>
-                    <p>Fetches a single article by ID</p>
-                </div>
-                <div class="route-item">
-                    <span class="method get">GET</span>
-                    <span class="route-path">/blog/user</span>
-                    <p>Fetches all articles by the logged-in user</p>
-                </div>
-                <div class="route-item">
-                    <span class="method post">POST</span>
-                    <span class="route-path">/blog</span>
-                    <p>Creates a new blog article (authenticated users only)</p>
-                </div>
-                <div class="route-item">
-                    <span class="method patch">PATCH</span>
-                    <span class="route-path">/blog/:id</span>
-                    <p>Updates an existing article (owner only)</p>
-                </div>
-                <div class="route-item">
-                    <span class="method delete">DELETE</span>
-                    <span class="route-path">/blog/:id</span>
-                    <p>Deletes an article (owner only)</p>
-                </div>
-            </div>
-        </section>
+        <div class="postman-docs">
+            <a href="https://www.postman.com/joint-operations-geoscientist-26235604/workspace/public/collection/36744366-647ea24d-60cf-478b-afc0-d73475a00948?action=share&creator=36744366"
+                class="postman-button" target="_blank">
+                View Docs on Postman
+            </a>
+            <a href="https://github.com/jamal-o/blog-api" class="github-button" target="_blank">
+                View on GitHub
+            </a>
+        </div>
+    </div>
 
-        <section class="features-section">
-            <h2>Key Features</h2>
-            <ul class="features-list">
-                <li>JWT Authentication with 1-hour token expiration</li>
-                <li>Blog articles support draft and published states</li>
-                <li>Pagination support</li>
-                <li>Filter articles by state, author, title, and tags</li>
-                <li>Sort articles by read count, reading time, and timestamp</li>
-                <li>Automatic reading time calculation</li>
-                <li>Read count tracking for articles</li>
-                <li>Author information included with blog details</li>
-            </ul>
-        </section>
+    <section class="auth-section">
+        <h2>Authentication</h2>
+        <div class="routes-section">
+            <div class="route-item">
+                <span class="method post">POST</span>
+                <span class="route-path">/auth/login</span>
+                <p>Authenticates user and returns JWT token</p>
+            </div>
+            <div class="route-item">
+                <span class="method post">POST</span>
+                <span class="route-path">/auth/signup</span>
+                <p>Creates a new user account</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section class="blog-section">
+        <h2>Blog Endpoints</h2>
+        <div class="routes-section">
+            <div class="route-item">
+                <span class="method get">GET</span>
+                <span class="route-path">/blog</span>
+                <p>Fetches all published articles (public access)</p>
+            </div>
+            <div class="route-item">
+                <span class="method get">GET</span>
+                <span class="route-path">/blog/:id</span>
+                <p>Fetches a single article by ID</p>
+            </div>
+            <div class="route-item">
+                <span class="method get">GET</span>
+                <span class="route-path">/blog/user</span>
+                <p>Fetches all articles by the logged-in user</p>
+            </div>
+            <div class="route-item">
+                <span class="method post">POST</span>
+                <span class="route-path">/blog</span>
+                <p>Creates a new blog article (authenticated users only)</p>
+            </div>
+            <div class="route-item">
+                <span class="method post">POST</span>
+                <span class="route-path">/blog/publish/:id</span>
+                <p>Updates the state of an article to published (author only)</p>
+            </div>
+            <div class="route-item">
+                <span class="method patch">PATCH</span>
+                <span class="route-path">/blog/:id</span>
+                <p>Updates an existing article (author only)</p>
+            </div>
+            <div class="route-item">
+                <span class="method delete">DELETE</span>
+                <span class="route-path">/blog/:id</span>
+                <p>Deletes an article (author only)</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <h2>Key Features</h2>
+        <ul class="features-list">
+            <h3>Authentication</h3>
+
+            <li>JWT Authentication with 1-hour token expiration</li>
+
+
+
+
+            <h3>Blog Management</h3>
+            <li>Create new blog posts (authenticated users)</li>
+            <li>Draft/Published state management</li>
+            <li>Edit and delete capabilities for blog owners</li>
+            <li>Personal blog list with pagination (defaualt 20 per page)</li>
+            <li>Filter blogs by state (draft/published)</li>
+
+
+            <h3>Public Access Features</h3>
+
+            <li>Search and read published blogs (no authentication required)</li>
+            <li>Search by author, title, and tags</li>
+            <li>Sort by:
+                <ul>
+                    <li>Read count</li>
+                    <li>Reading time</li>
+                    <li>Timestamp</li>
+                </ul>
+            </li>
+
+        </ul>
+    </section>
+    </section>
+    </ul>
+    </section>
     </div>
 </body>
+
 </html>
